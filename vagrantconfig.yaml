@@ -1,0 +1,5 @@
+# Vagrant Properties
+
+CPU: 2
+MEMORY: 2048
+PRIVATE_IP: 192.168.33.10

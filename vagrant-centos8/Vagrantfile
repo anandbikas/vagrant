@@ -1,0 +1,33 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.box = "bento/centos-8.2"
+  config.vm.box_version = "202010.22.0"
+  config.vm.box_check_update = false
+  config.vm.boot_timeout = 0
+
+  config.vm.box_url = "https://app.vagrantup.com/bento/boxes/centos-8.2"
+  config.ssh.forward_agent = true
+  config.ssh.insert_key = false
+
+ 
+  config.vm.define "vagrant_centos8", primary: true, autostart:true do |vagrant_centos8|
+    vagrant_centos8.vm.provider :virtualbox do |vb|
+      vb.name = "vagrant_centos8"
+      vb.gui = false
+      vb.customize ["modifyvm", :id, "--ioapic", "on"  ]
+      vb.customize ["modifyvm", :id, "--cpus"  , "2"   ]
+      vb.customize ["modifyvm", :id, "--memory", "2048"]
+    end
+    vagrant_centos8.vm.hostname = "vagrant-centos8"
+    vagrant_centos8.vm.network "private_network", ip: "192.168.33.16"
+    
+    vagrant_centos8.vm.synced_folder "~/vagrant_shared", "/vagrant_shared", create: true
+
+    vagrant_centos8.vm.provision "shell", path: "../scripts/add_swap_file.sh"
+
+  end
+end
